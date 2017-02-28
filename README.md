@@ -34,3 +34,6 @@ lost once the cli exits.
       -v, --version  Show version number                                   [boolean]
 
 
+
+![Exammple Image](example.png?raw=true "Example Image")
+
