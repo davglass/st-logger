@@ -1,0 +1,72 @@
+#!/usr/bin/env node
+
+const prompt = require('prompt');
+const st = require('../lib/st');
+
+const yargs = require('yargs')
+	.usage('Streaming Live Logging from the SmartThings Graph API\nUsage: $0 -u <user> -p <pass>')
+	.option('user', {
+		string: true,
+        alias: 'u',
+        describe: 'Your SmartThings username (email)'
+    })
+    .option('pass', {
+		string: true,
+        alias: 'p',
+        describe: 'Your SmartThings password'
+    })
+	.option('type', {
+		alias: 't',
+		describe: 'Filter the event types: event,info,debug,trace (comma seperated)',
+		default: 'event,info,debug,trace',
+		type: 'string'
+	})
+    .alias('h', 'help')
+    .alias('v', 'version')
+	.version()
+ 	.help();
+
+const args = yargs.argv;
+args.type = args.type && args.type.toUpperCase();
+
+const done = () => {
+    if (!args.user || !args.pass) {
+        yargs.showHelp();
+        process.exit(1);
+    }
+    st.auth(args.user, args.pass, (e, url) => {
+        st.logger(url, args);
+    });
+};
+
+if (!args.user || !args.pass) {
+    prompt.message = 'smartthings';
+    const props = {
+        properties: {
+            username: {
+                message: 'This is your SmartThings email address',
+                required: true,
+                format: 'email',
+                default: args.user
+            },
+            password: {
+                message: 'Your SmartThings password is required, it is never saved..',
+                replace: '*',
+                hidden: true,
+                required: true,
+                default: args.pass
+            }
+        }
+    };
+    prompt.start();
+    prompt.get(props, (err, result) => {
+        if (result) {
+            args.user = args.user || result.username;
+            args.pass = args.pass || result.password;
+        }
+        done();
+    });
+    return;
+}
+
+done();

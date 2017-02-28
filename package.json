@@ -1,0 +1,17 @@
+{
+  "name": "st-logger",
+  "version": "1.0.0",
+  "description": "SmartThings CLI event logger",
+  "bin": {
+    "st-logger": "./bin/st-logger"
+  },
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "request": "^2.79.0",
+    "ws": "^2.1.0",
+    "yargs": "^6.6.0"
+  },
+  "devDependencies": {},
+  "author": "Dav Glass <davglass@gmail.com>",
+  "license": "BSD-3-Clause"
+}
